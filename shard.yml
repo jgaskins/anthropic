@@ -1,0 +1,15 @@
+name: anthropic
+version: 0.1.0
+
+authors:
+  - Jamie Gaskins <jgaskins@hey.com>
+
+dependencies:
+  db:
+    github: crystal-lang/crystal-db
+  json-schema:
+    github: spider-gazelle/json-schema
+
+crystal: '>= 1.12.1'
+
+license: MIT
