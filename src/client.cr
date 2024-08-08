@@ -31,10 +31,18 @@ class Anthropic::Client
     end
   end
 
-  protected def post(path : String, body, *, headers : HTTP::Headers? = nil, as type : T.class = JSON::Any) forall T
+  protected def post(path : String, body, *, headers : HTTP::Headers? = nil, retries = 3, as type : T.class = JSON::Any) forall T
     response = http &.post path, headers: headers, body: body.to_json
-    if response.success?
+    case response.status
+    when .success?
       T.from_json response.body
+    when .overloaded?
+      if retries >= 0
+        sleep 1.second
+        post(path, body, headers: headers, retries: retries - 1, as: T)
+      else
+        raise Error.from_response_body(response.body)
+      end
     else
       raise Error.from_response_body(response.body)
     end
@@ -42,5 +50,11 @@ class Anthropic::Client
 
   protected def http
     @pool.checkout { |http| yield http }
+  end
+end
+
+enum HTTP::Status
+  def overloaded?
+    value == 529
   end
 end
