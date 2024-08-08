@@ -13,12 +13,10 @@ module Anthropic
       temperature : Float64? = nil,
       top_k : Int64? = nil,
       top_p : Float64? = nil,
-      tools : Array(Tool) | Array(Tool::Handler.class) | Nil = client.tools.values,
+      tools : Array? = nil,
       run_tools : Bool = true,
     ) : GeneratedMessage
-      if tools.is_a? Array(Tool::Handler.class)
-        tools = Anthropic.tools(tools)
-      end
+      tools = Anthropic.tools(tools)
 
       request = Request.new(
         model: model,
@@ -28,18 +26,35 @@ module Anthropic
         temperature: temperature,
         top_k: top_k,
         top_p: top_p,
-        tools: tools,
+        tools: tools.to_json,
       )
 
+      headers = HTTP::Headers.new
+
+      # Tools are apparently in beta as of this writing.
+      if tools.try(&.any?)
+        headers.add "anthropic-beta", "tools-2024-05-16"
+      end
+
+      # 3.5 Sonnet only supports 4k tokens by default, but you can opt into
+      # up to 8k output tokens.
+      # https://x.com/alexalbert__/status/1812921642143900036
+      if model.includes?("3-5-sonnet") && max_tokens > 4096
+        headers.add "anthropic-beta", "max-tokens-3-5-sonnet-2024-07-15"
+      end
+
+      # TODO: Investigate whether the `beta=tools` is needed since we're using
+      # the tools beta header above.
       response = client.post "/v1/messages?beta=tools",
-        headers: HTTP::Headers{"anthropic-beta" => "tools-2024-05-16"},
+        headers: headers,
         body: request,
         as: GeneratedMessage
+      response.message_thread = messages.dup << response.to_message
 
       if run_tools && response.stop_reason.try(&.tool_use?)
         tool_uses = response.content.compact_map(&.as?(ToolUse))
-        tools = tool_uses.compact_map { |tool_use| tools.find { |t| t.name == tool_use.name } }
-        tool_handlers = tools.map_with_index { |tool, index| tool.input_type.parse(tool_uses[index].input.to_json) }
+        tools_used = tool_uses.compact_map { |tool_use| tools.find { |t| t.name == tool_use.name } }
+        tool_handlers = tools_used.map_with_index { |tool, index| tool.input_type.parse(tool_uses[index].input.to_json) }
 
         if tool_handlers.any?
           result_texts = tool_handlers.map do |tool_handler|
@@ -126,7 +141,8 @@ module Anthropic
       getter stop_sequences : Array(String)?
       getter? stream : Bool?
       getter temperature : Float64?
-      getter tools : Array(Tool)?
+      @[JSON::Field(converter: String::RawConverter)]
+      getter tools : String?
       getter top_k : Int64?
       getter top_p : Float64?
       getter extra_headers : HTTP::Headers?

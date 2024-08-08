@@ -55,6 +55,11 @@ struct Anthropic::GeneratedMessage
   # `nil` string if one of your custom stop sequences was generated.
   getter stop_sequence : String?
 
+  # Messages that were passed to the
+  getter message_thread : Array(Message) { [to_message] }
+
+  protected setter message_thread
+
   # Billing and rate-limit usage.
   #
   # Anthropic's API bills and rate-limits by token counts, as tokens represent the

@@ -1,11 +1,19 @@
 require "./resource"
 
 module Anthropic
-  def self.tools(array : Array(Tool::Handler.class)) : Array(Tool)
+  def self.tools(array : Enumerable)
     array.map { |handler| tool(handler) }
   end
 
-  def self.tool(input_type : Tool::Handler.class, description : String? = input_type.description, *, name : String = input_type.name) : Tool
+  def self.tools(array : Array(Tool))
+    array
+  end
+
+  def self.tools(array : Nil)
+    [] of Tool(Tool::Handler.class)
+  end
+
+  def self.tool(input_type, description : String? = input_type.description, *, name : String = input_type.name) : Tool
     Tool.new(
       name: name,
       description: description,
@@ -13,15 +21,12 @@ module Anthropic
     )
   end
 
-  alias Tools = Array(Tool)
-  alias ToolHandlers = Array(Tool::Handler.class)
-
-  struct Tool
+  struct Tool(T)
     include Resource
 
     getter name : String
     getter description : String?
-    getter input_type : Handler.class
+    getter input_type : T
 
     def initialize(@name, @description, @input_type)
     end
