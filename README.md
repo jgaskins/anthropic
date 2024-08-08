@@ -50,14 +50,14 @@ puts claude.messages.create(
   # will be more stochastic.
   temperature: 0.5,
 
-  # You can pass an `Array(Anthropic::Tool::Handler)` (or the alias
-  # `Anthropic::ToolHandlers`) to give the model a way to run custom code in
-  # your app. See below for additional information on how to define those. The
-  # more tools you pass in with a request, the more tokens the request will use,
-  # so you should keep this to a reasonable size.
-  tools: Anthropic::ToolHandlers{
+  # You can pass an `Array` of tools to give the client a way to run custom code
+  # in your app. See below for additional information on how to define those.
+  # The more tools you pass in with a request, the more tokens the request will
+  # use, so you should keep this to a reasonable size.
+  tools: [
     GitHubUserLookup,
-  },
+    GoogleDriveSearch.new(google_oauth_token),
+  ],
 
   # Uncomment the following line to avoid automatically running the tool
   # selected by the model.
@@ -102,7 +102,8 @@ puts claude
 ### Defining tools
 
 Tools are objects that the Anthropic models can use to invoke your code. You
-can define them with a `struct` that inherits from `Anthropic::Tool::Handler`.
+can define them easily with a `struct` that inherits from
+`Anthropic::Tool::Handler`.
 
 ```crystal
 struct GitHubUserLookup < Anthropic::Tool::Handler
@@ -153,6 +154,108 @@ struct GitHubUserLookup < Anthropic::Tool::Handler
     getter public_gists : Int64
     getter followers : Int64
     getter following : Int64
+  end
+end
+```
+
+You can also define tools without inheriting from `Anthropic::Tool::Handler`. That type simply implements the following API on the tool object (instance or type) being passed in:
+
+- `name : String`
+- `description : String`
+- `json_schema`, which returns a `to_json`-able object
+- `parse`, which returns a `call`-able object which returns a `to_json`-able object
+
+Here is an example of a tool that searches a user's Google Drive (via the [`jgaskins/google`](https://github.com/jgaskins/google) shard) using the provided query. Claude will generate the query and pass it to the tool, 
+
+```crystal
+# Provided by 
+require "google"
+require "google/drive"
+
+record GoogleDriveSearch, token : String do
+  GOOGLE = Google::Client.new(
+    client_id: ENV["GOOGLE_CLIENT_ID"],
+    client_secret: ENV["GOOGLE_CLIENT_SECRET"],
+    redirect_uri: URI.parse("https://example.com/oauth2/google"),
+  )
+
+  def description
+    "Search Google for a user's documents with the given search query. You must use the Google Drive API query string format."
+  end
+
+  def name
+    "GoogleDriveSearch"
+  end
+
+  def json_schema
+    # The `json_schema` class method is provided on all `JSON::Serializable`
+    # types by the `spider-gazelle/json-schema` shard.
+    Query.json_schema
+  end
+
+  def parse(json : String)
+    query = Query.from_json json
+    query.search = self
+    query
+  end
+
+  def call(query : String)
+    files = GOOGLE
+      .drive
+      .files
+      .list(
+        token: token,
+        q: "(#{query}) and mimeType contains 'application/vnd.google-apps'",
+        limit: 10,
+      )
+      .to_a
+
+    array = Array(FileInfo).new(files.size)
+    # Requires this PR to be released, or the equivalent monkeypatch:
+    #   https://github.com/crystal-lang/crystal/pull/14837
+    WaitGroup.wait do |wg|
+      mutex = Mutex.new
+      files.each do |file|
+        wg.spawn do
+          file_info = FileInfo.new(
+            id: file.id,
+            name: file.name,
+            content: GOOGLE.drive.files.export(file, "text/plain", token, &.gets_to_end),
+            link: file.web_view_link,
+          )
+
+          mutex.synchronize do
+            array << file_info
+          end
+        end
+      end
+    end
+
+    array
+  end
+
+  struct FileInfo
+    include JSON::Serializable
+
+    getter id : String
+    getter name : String
+    getter content : String
+    getter link : String
+
+    def initialize(@id, @name, @content, @link)
+    end
+  end
+
+  struct Query
+    include JSON::Serializable
+
+    getter query : String
+    @[JSON::Field(ignore: true)]
+    protected property! search : GoogleDriveSearch
+
+    def call
+      search.call(query)
+    end
   end
 end
 ```
