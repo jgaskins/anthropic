@@ -168,7 +168,6 @@ You can also define tools without inheriting from `Anthropic::Tool::Handler`. Th
 Here is an example of a tool that searches a user's Google Drive (via the [`jgaskins/google`](https://github.com/jgaskins/google) shard) using the provided query. Claude will generate the query and pass it to the tool, 
 
 ```crystal
-# Provided by 
 require "google"
 require "google/drive"
 
