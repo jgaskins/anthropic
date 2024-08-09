@@ -18,20 +18,30 @@ Client for the Anthropic API. Supports tool use and running those tools automati
 
 ```crystal
 require "anthropic"
+```
 
-# Instantiate it explicitly with an API key
+The main entrypoint is via the `Anthropic::Client`. You can instantiate it explicitly with an API key:
+
+```crystal
 claude = Anthropic::Client.new("sk-and-api-03-asdfasdfasdf")
+```
 
-# If you omit the API key, it will be retrieved from the
-# ANTHROPIC_API_KEY environment variable
+Or you can omit the API key to automatically read it from the `ANTHROPIC_API_KEY` environment variable:
+
+```crystal
 claude = Anthropic::Client.new
+```
 
-puts claude.messages.create(
+Next, use the `Anthropic::Messages#create` method to send your prompt:
+
+```crystal
+response = claude.messages.create(
   # Pass a string representing the model name, or retrieve the full model
   # name via the shorthand with Anthropic.model_name.
   model: Anthropic.model_name(:sonnet),
 
-  # Define a system prompt if you want to give the AI a persona to use
+  # Define a system prompt if you want to give the AI a persona to use or some
+  # instructions on how to respond to the prompt.
   system: "You are an expert in the Crystal programming language",
 
   # You can pass the full list of messages, including messages it gave you
@@ -50,10 +60,12 @@ puts claude.messages.create(
   # will be more stochastic.
   temperature: 0.5,
 
-  # You can pass an `Array` of tools to give the client a way to run custom code
-  # in your app. See below for additional information on how to define those.
-  # The more tools you pass in with a request, the more tokens the request will
-  # use, so you should keep this to a reasonable size.
+  # You can optionally pass an `Array` of tools to give the client a way to run
+  # custom code in your app. See below for additional information on how to
+  # define those. The more tools you pass in with a request, the more tokens the
+  # request will use, so you should keep this to a reasonable size.
+  #
+  # If no tools are specified, the model won't try to run any.
   tools: [
     GitHubUserLookup,
     GoogleDriveSearch.new(google_oauth_token),

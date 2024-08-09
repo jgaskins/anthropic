@@ -8,7 +8,7 @@ module Anthropic
       *,
       model : String,
       max_tokens : Int32,
-      messages : Array(Message),
+      messages : Array(Anthropic::Message),
       system : String? = nil,
       temperature : Float64? = nil,
       top_k : Int64? = nil,
@@ -89,6 +89,8 @@ module Anthropic
       end
     end
 
+    # Send your prompt to the API and yield `Event`s as they are fed back in.
+    @[Experimental("Streaming message events kinda/sorta works, but needs further testing")]
     def create(
       *,
       model : String,
@@ -98,7 +100,8 @@ module Anthropic
       temperature : Float64? = nil,
       top_k : Int64? = nil,
       top_p : Float64? = nil,
-      tools : Array(Tool)? = client.tools.values,
+      # Tools are not supported yet for the block form of the method.
+      # tools : Array(Tool)? = client.tools.values,
       &block : Event -> T
     ) forall T
       client.http do |http|
@@ -188,7 +191,7 @@ module Anthropic
     end
   end
 
-  module Converters
+  private module Converters
     module TimeSpan
       extend self
 

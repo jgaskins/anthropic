@@ -1,7 +1,7 @@
 require "./client"
 
 module Anthropic
-  abstract struct API
+  private abstract struct API
     getter client : Client
 
     def initialize(@client)

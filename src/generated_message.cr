@@ -144,7 +144,6 @@ struct Anthropic::GeneratedMessage
 
     struct Schema
       include JSON::Serializable
-      include JSON::Serializable::Unmapped
 
       getter properties : JSON::Any
     end

@@ -97,12 +97,12 @@ module Anthropic
     retry : Int64? = nil
 
   abstract struct Event
+    # :nodoc:
     TYPE_MAP = {} of String => self.class
 
     macro define(type)
       struct {{type}} < ::Anthropic::Event
         include Resource
-        include JSON::Serializable::Unmapped
 
         Event::TYPE_MAP[{{type.stringify.underscore}}] = {{type}}
         
@@ -119,17 +119,8 @@ module Anthropic
     getter index : Int64
     getter content_block : ContentBlock?
 
-    # {"type" => "content_block_start",
-    #  "index" => 1,
-    #  "content_block" =>
-    #   {"type" => "tool_use",
-    #    "id" => "toolu_01CTSNRChbymYy9kk5SeLbsc",
-    #    "name" => "current_time",
-    #    "input" => {}}})
-
     struct ContentBlock
       include Resource
-      include JSON::Serializable::Unmapped
 
       getter type : GeneratedMessage::Content::Type?
       getter id : String?
@@ -164,7 +155,6 @@ module Anthropic
 
   struct TextDelta
     include Resource
-    include JSON::Serializable::Unmapped
 
     # This is always the literal "text_delta"
     # getter type : String

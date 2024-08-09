@@ -7,10 +7,31 @@ require "log"
 require "./tool"
 require "./error"
 
+# The `Anthropic::Client` is the entrypoint for using the Anthropic API in
+# Crystal.
+#
+# ```
+# claude = Anthropic::Client.new # get API key from the ENV
+# puts claude.messages.create(
+#   model: Anthropic.model_name(:haiku),
+#   messages: [Anthropic::Message.new("Write a haiku about the Crystal programming language")],
+#   max_tokens: 4096,
+# )
+# # Sparkling Crystal code,
+# # Elegant and swift syntax,
+# # Shines with precision.
+# ```
+#
+# The client is concurrency-safe, so you don't need to wrap requests in a mutex
+# or manage a connection pool yourself.
 class Anthropic::Client
   getter api_key : String
   getter base_uri : URI
 
+  # Instantiate a new client with the API key provided either directly or via
+  # the `ANTHROPIC_API_KEY` environment variable. You can optionally provide a
+  # base URI to connect to if you are using a different but compatible API
+  # provider.
   def initialize(
     @api_key = ENV["ANTHROPIC_API_KEY"],
     @base_uri = URI.parse(ENV.fetch("ANTHROPIC_BASE_URL", "https://api.anthropic.com")),

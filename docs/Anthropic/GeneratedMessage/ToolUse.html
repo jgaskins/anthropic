@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Crystal Docs 1.10.1">
+<meta name="crystal_docs.project_version" content="main-dev">
+<meta name="crystal_docs.project_name" content="anthropic">
+
+
+
+<link href="../../css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../js/doc.js"></script>
+
+  <meta name="repository-name" content="anthropic">
+  <title>Anthropic::GeneratedMessage::ToolUse - anthropic main-dev</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../../";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill="currentColor" fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<input type="checkbox" id="sidebar-btn">
+<label for="sidebar-btn" id="sidebar-btn-label">
+  <svg class="open" xmlns="http://www.w3.org/2000/svg" height="2em" width="2em" viewBox="0 0 512 512"><title>Open Sidebar</title><path fill="currentColor" d="M80 96v64h352V96H80zm0 112v64h352v-64H80zm0 112v64h352v-64H80z"></path></svg>
+  <svg class="close" xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 512 512"><title>Close Sidebar</title><path fill="currentColor" d="m118.6 73.4-45.2 45.2L210.7 256 73.4 393.4l45.2 45.2L256 301.3l137.4 137.3 45.2-45.2L301.3 256l137.3-137.4-45.2-45.2L256 210.7Z"></path></svg>
+</label>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="../../index.html">
+          anthropic
+        </a>
+      </h1>
+
+      <span class="project-version">
+        main-dev
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="anthropic/Anthropic" data-name="anthropic">
+      <a href="../../Anthropic.html">Anthropic</a>
+      
+        <ul>
+  
+  <li class=" " data-id="anthropic/Anthropic/Client" data-name="anthropic::client">
+      <a href="../../Anthropic/Client.html">Client</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/ContentBlockDelta" data-name="anthropic::contentblockdelta">
+      <a href="../../Anthropic/ContentBlockDelta.html">ContentBlockDelta</a>
+      
+    </li>
+  
+  <li class="parent " data-id="anthropic/Anthropic/ContentBlockStart" data-name="anthropic::contentblockstart">
+      <a href="../../Anthropic/ContentBlockStart.html">ContentBlockStart</a>
+      
+        <ul>
+  
+  <li class=" " data-id="anthropic/Anthropic/ContentBlockStart/ContentBlock" data-name="anthropic::contentblockstart::contentblock">
+      <a href="../../Anthropic/ContentBlockStart/ContentBlock.html">ContentBlock</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/ContentBlockStop" data-name="anthropic::contentblockstop">
+      <a href="../../Anthropic/ContentBlockStop.html">ContentBlockStop</a>
+      
+    </li>
+  
+  <li class="parent " data-id="anthropic/Anthropic/Error" data-name="anthropic::error">
+      <a href="../../Anthropic/Error.html">Error</a>
+      
+        <ul>
+  
+  <li class=" " data-id="anthropic/Anthropic/Error/APIError" data-name="anthropic::error::apierror">
+      <a href="../../Anthropic/Error/APIError.html">APIError</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/Error/AuthenticationError" data-name="anthropic::error::authenticationerror">
+      <a href="../../Anthropic/Error/AuthenticationError.html">AuthenticationError</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/Error/InvalidRequestError" data-name="anthropic::error::invalidrequesterror">
+      <a href="../../Anthropic/Error/InvalidRequestError.html">InvalidRequestError</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/Error/NotFoundError" data-name="anthropic::error::notfounderror">
+      <a href="../../Anthropic/Error/NotFoundError.html">NotFoundError</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/Error/OverloadedError" data-name="anthropic::error::overloadederror">
+      <a href="../../Anthropic/Error/OverloadedError.html">OverloadedError</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/Error/PermissionError" data-name="anthropic::error::permissionerror">
+      <a href="../../Anthropic/Error/PermissionError.html">PermissionError</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/Error/RateLimitError" data-name="anthropic::error::ratelimiterror">
+      <a href="../../Anthropic/Error/RateLimitError.html">RateLimitError</a>
+      
+    </li>
+  
+  <li class="parent " data-id="anthropic/Anthropic/Error/Response" data-name="anthropic::error::response">
+      <a href="../../Anthropic/Error/Response.html">Response</a>
+      
+        <ul>
+  
+  <li class=" " data-id="anthropic/Anthropic/Error/Response/Error" data-name="anthropic::error::response::error">
+      <a href="../../Anthropic/Error/Response/Error.html">Error</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/Event" data-name="anthropic::event">
+      <a href="../../Anthropic/Event.html">Event</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/EventMessage" data-name="anthropic::eventmessage">
+      <a href="../../Anthropic/EventMessage.html">EventMessage</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/EventSource" data-name="anthropic::eventsource">
+      <a href="../../Anthropic/EventSource.html">EventSource</a>
+      
+    </li>
+  
+  <li class="parent open current" data-id="anthropic/Anthropic/GeneratedMessage" data-name="anthropic::generatedmessage">
+      <a href="../../Anthropic/GeneratedMessage.html">GeneratedMessage</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="anthropic/Anthropic/GeneratedMessage/Content" data-name="anthropic::generatedmessage::content">
+      <a href="../../Anthropic/GeneratedMessage/Content.html">Content</a>
+      
+        <ul>
+  
+  <li class=" " data-id="anthropic/Anthropic/GeneratedMessage/Content/Type" data-name="anthropic::generatedmessage::content::type">
+      <a href="../../Anthropic/GeneratedMessage/Content/Type.html">Type</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/GeneratedMessage/StopReason" data-name="anthropic::generatedmessage::stopreason">
+      <a href="../../Anthropic/GeneratedMessage/StopReason.html">StopReason</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/GeneratedMessage/Text" data-name="anthropic::generatedmessage::text">
+      <a href="../../Anthropic/GeneratedMessage/Text.html">Text</a>
+      
+    </li>
+  
+  <li class="parent open current" data-id="anthropic/Anthropic/GeneratedMessage/ToolUse" data-name="anthropic::generatedmessage::tooluse">
+      <a href="../../Anthropic/GeneratedMessage/ToolUse.html">ToolUse</a>
+      
+        <ul>
+  
+  <li class=" " data-id="anthropic/Anthropic/GeneratedMessage/ToolUse/PossibleSchema" data-name="anthropic::generatedmessage::tooluse::possibleschema">
+      <a href="../../Anthropic/GeneratedMessage/ToolUse/PossibleSchema.html">PossibleSchema</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/GeneratedMessage/ToolUse/Schema" data-name="anthropic::generatedmessage::tooluse::schema">
+      <a href="../../Anthropic/GeneratedMessage/ToolUse/Schema.html">Schema</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/GeneratedMessage/Usage" data-name="anthropic::generatedmessage::usage">
+      <a href="../../Anthropic/GeneratedMessage/Usage.html">Usage</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="anthropic/Anthropic/Image" data-name="anthropic::image">
+      <a href="../../Anthropic/Image.html">Image</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="anthropic/Anthropic/Image/Source" data-name="anthropic::image::source">
+      <a href="../../Anthropic/Image/Source.html">Source</a>
+      
+        <ul>
+  
+  <li class=" " data-id="anthropic/Anthropic/Image/Source/MediaType" data-name="anthropic::image::source::mediatype">
+      <a href="../../Anthropic/Image/Source/MediaType.html">MediaType</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/Image/Source/Type" data-name="anthropic::image::source::type">
+      <a href="../../Anthropic/Image/Source/Type.html">Type</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="anthropic/Anthropic/Message" data-name="anthropic::message">
+      <a href="../../Anthropic/Message.html">Message</a>
+      
+        <ul>
+  
+  <li class=" " data-id="anthropic/Anthropic/Message/Role" data-name="anthropic::message::role">
+      <a href="../../Anthropic/Message/Role.html">Role</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/MessageContent" data-name="anthropic::messagecontent">
+      <a href="../../Anthropic/MessageContent.html">MessageContent</a>
+      
+    </li>
+  
+  <li class="parent " data-id="anthropic/Anthropic/MessageDelta" data-name="anthropic::messagedelta">
+      <a href="../../Anthropic/MessageDelta.html">MessageDelta</a>
+      
+        <ul>
+  
+  <li class=" " data-id="anthropic/Anthropic/MessageDelta/Delta" data-name="anthropic::messagedelta::delta">
+      <a href="../../Anthropic/MessageDelta/Delta.html">Delta</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/MessageDelta/Usage" data-name="anthropic::messagedelta::usage">
+      <a href="../../Anthropic/MessageDelta/Usage.html">Usage</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="anthropic/Anthropic/Messages" data-name="anthropic::messages">
+      <a href="../../Anthropic/Messages.html">Messages</a>
+      
+        <ul>
+  
+  <li class=" " data-id="anthropic/Anthropic/Messages/Body" data-name="anthropic::messages::body">
+      <a href="../../Anthropic/Messages/Body.html">Body</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/Messages/Query" data-name="anthropic::messages::query">
+      <a href="../../Anthropic/Messages/Query.html">Query</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/Messages/Request" data-name="anthropic::messages::request">
+      <a href="../../Anthropic/Messages/Request.html">Request</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/MessageStart" data-name="anthropic::messagestart">
+      <a href="../../Anthropic/MessageStart.html">MessageStart</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/MessageStop" data-name="anthropic::messagestop">
+      <a href="../../Anthropic/MessageStop.html">MessageStop</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/MessageStream" data-name="anthropic::messagestream">
+      <a href="../../Anthropic/MessageStream.html">MessageStream</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/Model" data-name="anthropic::model">
+      <a href="../../Anthropic/Model.html">Model</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/Ping" data-name="anthropic::ping">
+      <a href="../../Anthropic/Ping.html">Ping</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/Resource" data-name="anthropic::resource">
+      <a href="../../Anthropic/Resource.html">Resource</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/Text" data-name="anthropic::text">
+      <a href="../../Anthropic/Text.html">Text</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/TextDelta" data-name="anthropic::textdelta">
+      <a href="../../Anthropic/TextDelta.html">TextDelta</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/TextOrImageContent" data-name="anthropic::textorimagecontent">
+      <a href="../../Anthropic/TextOrImageContent.html">TextOrImageContent</a>
+      
+    </li>
+  
+  <li class="parent " data-id="anthropic/Anthropic/Tool" data-name="anthropic::tool(t)">
+      <a href="../../Anthropic/Tool.html">Tool</a>
+      
+        <ul>
+  
+  <li class=" " data-id="anthropic/Anthropic/Tool/Handler" data-name="anthropic::tool::handler">
+      <a href="../../Anthropic/Tool/Handler.html">Handler</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/ToolResult" data-name="anthropic::toolresult">
+      <a href="../../Anthropic/ToolResult.html">ToolResult</a>
+      
+    </li>
+  
+  <li class=" " data-id="anthropic/Anthropic/ToolUse" data-name="anthropic::tooluse">
+      <a href="../../Anthropic/ToolUse.html">ToolUse</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">struct</span> Anthropic::<wbr>GeneratedMessage::<wbr>ToolUse
+
+</h1>
+
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Anthropic/GeneratedMessage/ToolUse.html">Anthropic::GeneratedMessage::ToolUse</a></li><li class="superclass"><a href="../../Anthropic/GeneratedMessage/Content.html">Anthropic::GeneratedMessage::Content</a></li><li class="superclass">Struct</li><li class="superclass">Value</li><li class="superclass">Object</li></ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="defined-in" class="anchor" href="#defined-in">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Defined in:
+  </h2>
+  
+    
+      generated_message.cr
+    
+    <br/>
+  
+
+
+
+
+
+  <h2>
+    <a id="constructors" class="anchor" href="#constructors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructors
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#new%28pull%3AJSON%3A%3APullParser%29-class-method" class="signature"><strong>.new</strong>(pull : JSON::PullParser)</a>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+
+
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#id%3AString%7CNil-instance-method" class="signature"><strong>#id</strong> : String | Nil</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#input%3AJSON%3A%3AAny-instance-method" class="signature"><strong>#input</strong> : JSON::Any</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#name%3AString%7CNil-instance-method" class="signature"><strong>#name</strong> : String | Nil</a>
+        
+      </li>
+    
+  </ul>
+
+
+
+<div class="methods-inherited">
+  
+    
+
+  <h3>Instance methods inherited from struct <code><a href="../../Anthropic/GeneratedMessage/Content.html">Anthropic::GeneratedMessage::Content</a></code></h3>
+  
+  
+    <a href="../../Anthropic/GeneratedMessage/Content.html#type%3AType-instance-method" class="tooltip">
+      <span>type : Type</span>
+    type</a>
+    
+  
+
+
+    
+
+  <h3>Constructor methods inherited from struct <code><a href="../../Anthropic/GeneratedMessage/Content.html">Anthropic::GeneratedMessage::Content</a></code></h3>
+  
+  
+    <a href="../../Anthropic/GeneratedMessage/Content.html#new%28pull%3AJSON%3A%3APullParser%29-class-method" class="tooltip">
+      <span>new(pull : JSON::PullParser)</span>
+    new</a>
+    
+  
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+    
+
+
+  
+</div>
+
+
+  <h2>
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructor Detail
+  </h2>
+  
+    <div class="entry-detail" id="new(pull:JSON::PullParser)-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(pull : JSON::PullParser)
+
+        <a class="method-permalink" href="#new%28pull%3AJSON%3A%3APullParser%29-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+
+
+
+
+
+
+
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="id:String|Nil-instance-method">
+      <div class="signature">
+        
+        def <strong>id</strong> : String | Nil
+
+        <a class="method-permalink" href="#id%3AString%7CNil-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="input:JSON::Any-instance-method">
+      <div class="signature">
+        
+        def <strong>input</strong> : JSON::Any
+
+        <a class="method-permalink" href="#input%3AJSON%3A%3AAny-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="name:String|Nil-instance-method">
+      <div class="signature">
+        
+        def <strong>name</strong> : String | Nil
+
+        <a class="method-permalink" href="#name%3AString%7CNil-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+
+
+</div>
+
+</body>
+</html>
