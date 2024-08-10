@@ -31,11 +31,6 @@ module Anthropic
 
       headers = HTTP::Headers.new
 
-      # Tools are apparently in beta as of this writing.
-      if tools.try(&.any?)
-        headers.add "anthropic-beta", "tools-2024-05-16"
-      end
-
       # 3.5 Sonnet only supports 4k tokens by default, but you can opt into
       # up to 8k output tokens.
       # https://x.com/alexalbert__/status/1812921642143900036
