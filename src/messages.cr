@@ -4,6 +4,22 @@ require "./event_source"
 
 module Anthropic
   struct Messages < API
+    CREATE_HEADERS = HTTP::Headers{
+      "anthropic-beta" => {
+        # Not sure if this one is still necessary because tools seem to work
+        # without it, but keeping it here until I see something official.
+        "tools-2024-04-04",
+
+        # 3.5 Sonnet only supports 4k tokens by default, but you can opt into
+        # up to 8k output tokens.
+        # https://x.com/alexalbert__/status/1812921642143900036
+        "max-tokens-3-5-sonnet-2024-07-15",
+
+        # https://www.anthropic.com/news/prompt-caching
+        "prompt-caching-2024-07-31",
+      }.join(','),
+    }
+
     def create(
       *,
       model : String,
@@ -29,19 +45,10 @@ module Anthropic
         tools: tools.to_json,
       )
 
-      headers = HTTP::Headers.new
-
-      # 3.5 Sonnet only supports 4k tokens by default, but you can opt into
-      # up to 8k output tokens.
-      # https://x.com/alexalbert__/status/1812921642143900036
-      if model.includes?("3-5-sonnet") && max_tokens > 4096
-        headers.add "anthropic-beta", "max-tokens-3-5-sonnet-2024-07-15"
-      end
-
       # TODO: Investigate whether the `beta=tools` is needed since we're using
       # the tools beta header above.
       response = client.post "/v1/messages?beta=tools",
-        headers: headers,
+        headers: CREATE_HEADERS,
         body: request,
         as: GeneratedMessage
       response.message_thread = messages.dup << response.to_message

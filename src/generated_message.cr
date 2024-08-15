@@ -154,6 +154,8 @@ struct Anthropic::GeneratedMessage
 
     getter input_tokens : Int64
     getter output_tokens : Int64
+    getter cache_creation_input_tokens : Int64 = 0
+    getter cache_read_input_tokens : Int64 = 0
   end
 
   enum StopReason

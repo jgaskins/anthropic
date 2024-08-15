@@ -1,12 +1,16 @@
-require "./resource"
 require "json"
 require "base64"
+
+require "./resource"
+require "./cache_control"
 
 module Anthropic
   abstract struct MessageContent
     include Resource
 
     abstract def type : String
+
+    getter cache_control : CacheControl?
 
     use_json_discriminator "type", {
       text:        Text,
@@ -26,7 +30,7 @@ module Anthropic
     getter type : String = "text"
     getter text : String
 
-    def initialize(@text)
+    def initialize(@text, *, @cache_control = nil)
     end
 
     def to_s(io) : Nil
@@ -40,15 +44,16 @@ module Anthropic
     getter type : String = "image"
     getter source : Source
 
-    def self.base64(media_type : Source::MediaType, data : String)
+    def self.base64(media_type : Source::MediaType, data : String, cache_control : CacheControl? = nil)
       new(
         type: :base64,
         media_type: media_type,
         data: Base64.strict_encode(data),
+        cache_control: cache_control,
       )
     end
 
-    def initialize(*, type : Source::Type, media_type : Source::MediaType, data : String)
+    def initialize(*, type : Source::Type, media_type : Source::MediaType, data : String, @cache_control = nil)
       @source = Source.new(type: type, media_type: media_type, data: data)
     end
 
