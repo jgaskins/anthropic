@@ -25,7 +25,7 @@ module Anthropic
       model : String,
       max_tokens : Int32,
       messages : Array(Anthropic::Message),
-      system : String? = nil,
+      system : String | Anthropic::MessageContent | Array | Nil = nil,
       temperature : Float64? = nil,
       top_k : Int64? = nil,
       top_p : Float64? = nil,
@@ -33,6 +33,7 @@ module Anthropic
       run_tools : Bool = true,
     ) : GeneratedMessage
       tools = Anthropic.tools(tools)
+      system = MessageContentTransformer.new.call system
 
       request = Request.new(
         model: model,
@@ -141,7 +142,7 @@ module Anthropic
       getter model : String
       getter messages : Array(Message)
       getter max_tokens : Int32
-      getter system : String?
+      getter system : String | MessageContent | Array(MessageContent) | Nil
       getter metadata : Hash(String, String)?
       getter stop_sequences : Array(String)?
       getter? stream : Bool?
@@ -175,6 +176,27 @@ module Anthropic
         @extra_body = nil
         # @timeout = nil
       )
+      end
+    end
+
+    struct MessageContentTransformer
+      def call(contents : Array) : Array(MessageContent)
+        contents.flat_map { |content| call(content).as(MessageContent) }
+      end
+
+      def call(contents : Array(MessageContent)) : Array(MessageContent)
+        contents.map(&.as(MessageContent))
+      end
+
+      def call(content : MessageContent) : Array(MessageContent)
+        [content.as(MessageContent)]
+      end
+
+      def call(string : String) : Array(MessageContent)
+        call Text.new(string).as(MessageContent)
+      end
+
+      def call(nothing : Nil) : Nil
       end
     end
 
