@@ -29,9 +29,32 @@ module Anthropic
       temperature : Float64? = nil,
       top_k : Int64? = nil,
       top_p : Float64? = nil,
-      tools : Array? = nil,
+    )
+      create(
+        model: model,
+        max_tokens: max_tokens,
+        messages: messages,
+        system: system,
+        temperature: temperature,
+        top_k: top_k,
+        top_p: top_p,
+        tools: [] of Tool(Tool::Handler.class),
+        run_tools: false,
+      ).first
+    end
+
+    def create(
+      *,
+      model : String,
+      max_tokens : Int32,
+      messages : Array(Anthropic::Message),
+      system : String | Anthropic::MessageContent | Array | Nil = nil,
+      temperature : Float64? = nil,
+      top_k : Int64? = nil,
+      top_p : Float64? = nil,
+      tools : Array,
       run_tools : Bool = true,
-    ) : GeneratedMessage
+    ) : Array(GeneratedMessage)
       tools = Anthropic.tools(tools)
       system = MessageContentTransformer.new.call system
 
@@ -45,6 +68,7 @@ module Anthropic
         top_p: top_p,
         tools: tools.to_json,
       )
+      responses = [] of GeneratedMessage
 
       # TODO: Investigate whether the `beta=tools` is needed since we're using
       # the tools beta header above.
@@ -53,6 +77,7 @@ module Anthropic
         body: request,
         as: GeneratedMessage
       response.message_thread = messages.dup << response.to_message
+      responses << response
 
       if run_tools && response.stop_reason.try(&.tool_use?)
         tool_uses = response.content.compact_map(&.as?(ToolUse))
@@ -60,10 +85,11 @@ module Anthropic
         tool_handlers = tools_used.map_with_index { |tool, index| tool.input_type.parse(tool_uses[index].input.to_json) }
 
         if tool_handlers.any?
+          # TODO: run tool handlers concurrently
           result_texts = tool_handlers.map do |tool_handler|
             Text.new(tool_handler.call.to_json).as(Text)
           end
-          create(
+          responses.concat create(
             model: model,
             max_tokens: max_tokens,
             messages: messages + [
@@ -85,10 +111,10 @@ module Anthropic
             run_tools: run_tools,
           )
         else
-          response
+          responses
         end
       else
-        response
+        responses
       end
     end
 
