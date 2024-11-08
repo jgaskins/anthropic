@@ -12,6 +12,7 @@ module Anthropic
 
   enum Model
     Haiku
+    Haiku3
     Sonnet
     Opus
   end
