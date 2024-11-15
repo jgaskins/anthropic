@@ -65,7 +65,7 @@ response = claude.messages.create(
   # define those. The more tools you pass in with a request, the more tokens the
   # request will use, so you should keep this to a reasonable size.
   #
-  # If no tools are specified, the model won't try to run any.
+  # By default, no tools are included.
   tools: [
     GitHubUserLookup,
     GoogleDriveSearch.new(google_oauth_token),
