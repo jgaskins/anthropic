@@ -68,19 +68,37 @@ module Anthropic
         top_p: top_p,
         tools: tools.to_json,
       )
-      responses = [] of GeneratedMessage
 
       # TODO: Investigate whether the `beta=tools` is needed since we're using
       # the tools beta header above.
-      response = client.post "/v1/messages?beta=tools",
+      pp response = client.post "/v1/messages?beta=tools",
         headers: CREATE_HEADERS,
         body: request,
         as: GeneratedMessage
+      responses = [response]
       response.message_thread = messages.dup << response.to_message
-      responses << response
+
+      if response.stop_reason.try(&.max_tokens?)
+        original_response = response
+
+        responses.concat create(
+          model: model,
+          max_tokens: max_tokens,
+          messages: original_response.message_thread,
+          system: system,
+          top_k: top_k,
+          top_p: top_p,
+          tools: tools,
+          run_tools: run_tools,
+        )
+        responses << response
+        responses.each do |response|
+          response.message_thread ||= original_response.message_thread + responses.map(&.to_message)
+        end
+      end
 
       if run_tools && response.stop_reason.try(&.tool_use?)
-        tool_uses = response.content.compact_map(&.as?(ToolUse))
+        tool_uses = responses.flat_map(&.content.compact_map(&.as?(ToolUse)))
         tools_used = tool_uses.compact_map { |tool_use| tools.find { |t| t.name == tool_use.name } }
         tool_handlers = tools_used.map_with_index { |tool, index| tool.input_type.parse(tool_uses[index].input.to_json) }
 
