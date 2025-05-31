@@ -35,7 +35,7 @@ class Anthropic::Client
   def initialize(
     @api_key = ENV["ANTHROPIC_API_KEY"],
     @base_uri = URI.parse(ENV.fetch("ANTHROPIC_BASE_URL", "https://api.anthropic.com")),
-    @log = Log.for(self.class)
+    @log = Log.for(self.class),
   )
     options = {
       max_idle_pool_size: 10,
@@ -50,6 +50,30 @@ class Anthropic::Client
       end
       http
     end
+  end
+
+  def models
+    http &.get "/v1/models" do |response|
+      if response.success?
+        ModelsResponse.from_json(response.body_io).data
+      else
+        raise Error.new("Unexpected HTTP response status: #{response.status} - #{response.body_io.gets_to_end}")
+      end
+    end
+  end
+
+  private struct ModelsResponse
+    include Resource
+
+    getter data : Array(Model)
+  end
+
+  struct Model
+    include Resource
+
+    getter id : String
+    getter display_name : String
+    getter created_at : Time
   end
 
   protected def post(path : String, body, *, headers : HTTP::Headers? = nil, retries = 3, as type : T.class = JSON::Any) forall T
@@ -69,7 +93,7 @@ class Anthropic::Client
     end
   end
 
-  protected def http
+  protected def http(&)
     @pool.checkout { |http| yield http }
   end
 end
