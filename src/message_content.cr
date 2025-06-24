@@ -22,7 +22,7 @@ module Anthropic
 
   abstract struct TextOrImageContent < MessageContent
     def self.new(pull : ::JSON::PullParser)
-      raise "oops"
+      raise NotImplementedError.new("Cannot parse Anthropic::TextOrImageContent from JSON")
     end
   end
 
