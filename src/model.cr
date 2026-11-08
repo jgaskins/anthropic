@@ -1,8 +1,8 @@
 module Anthropic
   private MODELS = {
-    Model::Haiku     => "claude-haiku-4-5",
-    Model::Sonnet    => "claude-sonnet-5",
-    Model::Opus      => "claude-opus-5",
+    Model::Haiku     => "claude-haiku-5-5",
+    Model::Sonnet    => "claude-sonnet-5-5",
+    Model::Opus      => "claude-opus-5-5",
   }
 
   def self.model_name(model : Model)
