@@ -17,6 +17,7 @@ module Anthropic
       image:       Image,
       tool_use:    ToolUse,
       tool_result: ToolResult,
+      thinking:    Thinking,
     }
 
     def no_cache_control! : self
@@ -146,6 +147,16 @@ module Anthropic
     end
 
     def initialize(*, @tool_use_id, @error = false, @content)
+    end
+  end
+
+  class Thinking < MessageContent
+    getter type : String = "thinking"
+    getter signature : String?
+    getter thinking : String
+
+    def to_s(io)
+      io << thinking
     end
   end
 end
