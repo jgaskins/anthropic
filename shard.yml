@@ -9,6 +9,7 @@ dependencies:
     github: crystal-lang/crystal-db
   json-schema:
     github: spider-gazelle/json-schema
+    version: ~> 1.0
 
 crystal: '>= 1.12.1'
 
